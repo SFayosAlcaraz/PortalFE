@@ -1,0 +1,12 @@
+{
+  "name": "portalfe-api",
+  "version": "1.0.0",
+  "description": "Azure Function API for PortalFE",
+  "main": "index.js",
+  "scripts": {
+    "start": "func start"
+  },
+  "dependencies": {
+    "mssql": "^8.1.0"
+  }
+}
