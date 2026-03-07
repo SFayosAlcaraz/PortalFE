@@ -12,6 +12,7 @@
 </head>
 <body>
     <h1>Listado de empresas</h1>
+    <button id="refreshBtn">Actualizar listado</button>
     <table id="tbl">
         <thead>
             <tr><th>ID</th><th>CIF</th><th>Nombre</th><th>Sector</th></tr>
@@ -19,16 +20,23 @@
         <tbody></tbody>
     </table>
     <script>
-    fetch('/api/GetEmpresas')
-      .then(r=>r.json())
-      .then(data=>{
-        const body=document.querySelector('#tbl tbody');
-        data.forEach(e=>{
-          const tr=document.createElement('tr');
-          tr.innerHTML = `<td>${e.id}</td><td>${e.cif}</td><td>${e.nombre}</td><td>${e.sector}</td>`;
-          body.appendChild(tr);
-        });
-      }).catch(console.error);
+    function loadEmpresas() {
+      fetch('/api/GetEmpresas')
+        .then(r=>r.json())
+        .then(data=>{
+          const body=document.querySelector('#tbl tbody');
+          body.innerHTML = ''; // limpiar filas anteriores
+          data.forEach(e=>{
+            const tr=document.createElement('tr');
+            tr.innerHTML = `<td>${e.id}</td><td>${e.cif}</td><td>${e.nombre}</td><td>${e.sector}</td>`;
+            body.appendChild(tr);
+          });
+        }).catch(console.error);
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', loadEmpresas);
+    // cargar al inicio
+    loadEmpresas();
     </script>
 </body>
 </html>
