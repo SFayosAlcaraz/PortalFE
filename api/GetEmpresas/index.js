@@ -10,14 +10,21 @@ module.exports = async function (context, req) {
     };
 
     try {
+        context.log('Conectando con config', config.server, config.database);
         await sql.connect(config);
+        context.log('Conexión establecida, ejecutando consulta');
         const result = await sql.query`SELECT * FROM empresas`;
+        context.log('Consulta ejecutada, filas:', result.recordset.length);
         context.res = {
             headers: { 'Content-Type': 'application/json' },
-            body: result.recordset
+            body: result.recordset || []
         };
     } catch (err) {
-        context.log.error(err);
-        context.res = { status: 500, body: "Error al consultar la BBDD" };
+        context.log.error('Error en la función GetEmpresas:', err);
+        context.res = {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+            body: { error: 'Error al consultar la BBDD', details: err.message }
+        };
     }
 };

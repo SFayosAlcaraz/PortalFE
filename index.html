@@ -47,7 +47,16 @@
       // paso 1: inicio de petición
       setStep(1, '1. Enviando petición al endpoint /api/GetEmpresas...');
       fetch('/api/GetEmpresas')
-        .then(r=>{
+        .then(async r=>{
+          if (!r.ok) {
+            const txt = await r.text();
+            throw new Error(`HTTP ${r.status} - ${txt}`);
+          }
+          const type = r.headers.get('content-type') || '';
+          if (!type.includes('application/json')) {
+            const txt = await r.text();
+            throw new Error('Respuesta no JSON: ' + txt);
+          }
           setStep(2, '2. Respuesta recibida, parseando JSON...');
           return r.json();
         })
