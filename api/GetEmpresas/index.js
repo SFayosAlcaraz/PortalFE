@@ -1,12 +1,22 @@
 const sql = require('mssql');
 
 module.exports = async function (context, req) {
+    // use the newer authentication structure to avoid any protocol parsing issues
     const config = {
         server: process.env.SQL_SERVER,
         database: process.env.SQL_DB,
-        user: process.env.SQL_USER,
-        password: process.env.SQL_PWD,
-        options: { encrypt: true }
+        port: 1433,
+        authentication: {
+            type: 'default',
+            options: {
+                userName: process.env.SQL_USER,
+                password: process.env.SQL_PWD
+            }
+        },
+        options: {
+            encrypt: true,
+            trustServerCertificate: false // for Azure SQL this should be false
+        }
     };
 
     try {
